@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{5264BF5D-B848-DD5F-C819-5AA96AECB88E}",
+	"EngineAssociation": "{0469BE6D-2648-6151-1B35-0D97B05A043D}",
 	"Category": "",
 	"Description": "",
 	"Plugins": [
@@ -10,7 +10,8 @@
 			"SupportedTargetPlatforms": [
 				"Win64",
 				"Linux",
-				"Android"
+				"Android",
+				"VisionOS"
 			]
 		},
 		{
@@ -28,7 +29,8 @@
 			"SupportedTargetPlatforms": [
 				"Win64",
 				"Linux",
-				"Android"
+				"Android",
+				"VisionOS"
 			]
 		}
 	],
