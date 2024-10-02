@@ -1,14 +1,6 @@
 {
 	"FileVersion": 3,
-<<<<<<< HEAD
-<<<<<<< HEAD
 	"EngineAssociation": "{5264BF5D-B848-DD5F-C819-5AA96AECB88E}",
-=======
-	"EngineAssociation": "",
->>>>>>> parent of 306b70f (Revert "Merge branch 'Art_Testing' into Programming")
-=======
-	"EngineAssociation": "5.4",
->>>>>>> parent of 9e22db8 (started C++)
 	"Category": "",
 	"Description": "",
 	"Plugins": [
