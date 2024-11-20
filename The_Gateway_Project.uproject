@@ -1,10 +1,6 @@
 {
 	"FileVersion": 3,
-<<<<<<< Updated upstream
 	"EngineAssociation": "{DA1A9BF9-654E-311A-B7F9-8DA73DEA5647}",
-=======
-	"EngineAssociation": "{19A48A64-114F-B91F-7491-8D9503F7AC1D}",
->>>>>>> Stashed changes
 	"Category": "",
 	"Description": "",
 	"Plugins": [
