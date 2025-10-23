@@ -28,8 +28,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, Category="Visibility")
-	TArray<UMaterial*> Materials;
+	TArray<UMaterial*> DisabledMaterials;
 
+	UPROPERTY(EditAnywhere, Category="Visibility")
+	TArray<UMaterial*> EnabledMaterials;
+	
 	UPROPERTY(EditAnywhere, Category="Visibility")
 	UStaticMesh* Mesh;
 	

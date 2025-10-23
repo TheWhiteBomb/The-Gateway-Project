@@ -20,10 +20,12 @@ AFacilityLight::AFacilityLight()
 
 void AFacilityLight::OnConstruction(const FTransform& Transform)
 {
+	Super::OnConstruction(Transform);
+	
 	MeshComponent->SetStaticMesh(Mesh);
-	for (int i = 0; i < Materials.Num(); i++)
+	for (int i = 0; i < EnabledMaterials.Num(); i++)
 	{
-		MeshComponent->SetMaterial(i, Materials[i]);
+		MeshComponent->SetMaterial(i, EnabledMaterials[i]);
 	}
 }
 
@@ -52,5 +54,11 @@ void AFacilityLight::SetEnabled(const bool Enabled) const
 			ULightComponentBase* Light = Cast<ULightComponentBase>(v);
 			Light->SetVisibility(Enabled);
 		}
+	}
+
+	TArray<UMaterial*> materials = (Enabled) ? EnabledMaterials : DisabledMaterials;
+	for (int i = 0; i < EnabledMaterials.Num(); i++)
+	{
+		MeshComponent->SetMaterial(i, materials[i]);
 	}
 }

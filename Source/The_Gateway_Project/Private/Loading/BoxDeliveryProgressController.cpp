@@ -4,16 +4,17 @@
 #include "Loading/BoxDeliveryProgressController.h"
 
 #include "GatewayConfiguration.h"
+#include "Loading/FacilityLight.h"
 
 void ABoxDeliveryProgressController::OnTick(float DeltaTime)
 {
 	Super::OnTick(DeltaTime);
 	
-	int lightCount = PointLights.Num();
+	int lightCount = FacilityLights.Num();
 	for (int i = 0; i < lightCount; i++)
 	{
-		auto v = PointLights[i];
-		auto pointLight = Cast<APointLight>(v);
+		auto v = FacilityLights[i];
+		auto pointLight = Cast<AFacilityLight>(v);
 			
 		float transitionPhase = static_cast<float>(i)/static_cast<float>(lightCount);
 		
@@ -37,29 +38,28 @@ void ABoxDeliveryProgressController::OnTick(float DeltaTime)
 void ABoxDeliveryProgressController::OnPreTransition()
 {
 	TransitionDuration = 3;
-	PointLights = GetPointLights();
-	UE_LOG(GWLogDayChange, Display, TEXT("PointLights found: %d"), PointLights.Num())
+	FacilityLights = GetFacilityLights();
+	UE_LOG(GWLogDayChange, Display, TEXT("PointLights found: %d"), FacilityLights.Num())
 }
 
 void ABoxDeliveryProgressController::OnDestroyAnyReason()
 {
-	for (auto actor : PointLights)
+	for (auto actor : FacilityLights)
 	{
-		APointLight* v = Cast<APointLight>(actor);
-
-		if (!v->IsEnabled())
-		{
-			v->ToggleEnabled();
-		}
+		AFacilityLight* v = Cast<AFacilityLight>(actor);
+		v->SetEnabled(true);
 	}
 }
 
 
-TArray<AActor*> ABoxDeliveryProgressController::GetPointLights()
+TArray<AActor*> ABoxDeliveryProgressController::GetFacilityLights() const
 {
-	TArray<AActor*> pointLights;
-	UGameplayStatics::GetAllActorsOfClass(this, APointLight::StaticClass(), pointLights);
+	TArray<AActor*> lights;
+	UGameplayStatics::GetAllActorsOfClass(this, AFacilityLight::StaticClass(), lights);
 
-	return pointLights;
+	UE_LOG(GWLogDebug, Display, TEXT("Found facility light anywhere"));
+
+	
+	return lights;
 }
 
