@@ -26,20 +26,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(EditAnywhere, Category="Visibility")
-	TArray<UMaterial*> DisabledMaterials;
-
-	UPROPERTY(EditAnywhere, Category="Visibility")
-	TArray<UMaterial*> EnabledMaterials;
 	
-	UPROPERTY(EditAnywhere, Category="Visibility")
-	UStaticMesh* Mesh;
-	
-private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* Root;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* MeshComponent;
 };
