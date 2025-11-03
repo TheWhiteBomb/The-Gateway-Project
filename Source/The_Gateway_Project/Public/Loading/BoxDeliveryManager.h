@@ -17,12 +17,6 @@ class THE_GATEWAY_PROJECT_API ABoxDeliveryManager : public AActor
 	USceneComponent* _RootComponent;
 
 	UFUNCTION()
-	TArray<FBoxDeliveryDay> InitializeBoxDistribution();
-
-	UPROPERTY()
-	TArray<FBoxDeliveryDay> BoxDistributionPattern;
-
-	UFUNCTION()
 	int GetOverallBoxCount(TArray<FDeliveryElementConfig> boxConfigs);
 
 	UFUNCTION()
@@ -30,21 +24,39 @@ class THE_GATEWAY_PROJECT_API ABoxDeliveryManager : public AActor
 
 	UPROPERTY()
 	int RandomBoxRecursionCounter = 0;
+
+	UPROPERTY()
+	TArray<AActor*> Boxes;
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category="Delivery Configuration")
+	float BoxSpawnDistributionDistance = 150;
+	
+	UPROPERTY(EditAnywhere, Category="Delivery Configuration", DisplayName="Box Classes")
+	TMap<EBoxSize, TSubclassOf<AActor>> StaticBoxParentClasses;
+	
+	UFUNCTION()
+	TArray<FBoxDeliveryDay> InitializeBoxDistribution();
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnBoxesForDay(int day);
+
+	UPROPERTY()
+	TArray<FBoxDeliveryDay> BoxDistributionPattern;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Delivery Configuration")
 	UDataTable* BoxDeliveryData;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Delivery Configuration")
 	int TotalDays = 30;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shuffle Configuration")
 	int SelectionPercentageBias = 5;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shuffle Configuration")
 	bool ReverseBoxSelectionMethod = true;
 
-	UPROPERTY(editAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Shuffle Configuration")
 	int RandomBoxRecursionBound = 1000;
 	
 protected:

@@ -19,9 +19,6 @@ ADayCycleRunner::ADayCycleRunner()
 void ADayCycleRunner::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Temp
-	ProgressDaySequence(1);
 }
 
 void ADayCycleRunner::Tick(float DeltaTime)
@@ -36,7 +33,7 @@ void ADayCycleRunner::Tick(float DeltaTime)
 		{
 			LocalFinalizedTransition = true;
 			ProgressDayInstantly();
-			ActiveProgressor->OnParentRecognizedTransitionFinished();
+			ActiveProgressor->OnParentRecognizedTransitionFinalized();
 
 			if (ActiveProgressor->ResetDaysOnComplete)
 			{
@@ -54,8 +51,13 @@ void ADayCycleRunner::Tick(float DeltaTime)
 
 void ADayCycleRunner::ProgressDayInstantly()
 {
-	OnTransitionFinish();
+	OnDayChange();
 	DayCount++;
+}
+
+bool ADayCycleRunner::IsTransitioning()
+{
+	return ActiveProgressor != nullptr;
 }
 
 void ADayCycleRunner::RemoveActiveProgressor()
@@ -72,6 +74,8 @@ void ADayCycleRunner::RemoveActiveProgressor()
 		ActiveProgressor->MarkAsGarbage();
 		ActiveProgressor = nullptr;
 		LocalFinalizedTransition = false;
+
+		OnTransitionFinish();
 	}
 	else
 	{
@@ -79,7 +83,7 @@ void ADayCycleRunner::RemoveActiveProgressor()
 	}
 }
 
-void ADayCycleRunner::ProgressDaySequence(int DayProgressorIndex)
+void ADayCycleRunner::ProgressDaySequenceAtTime(int DayProgressorIndex, float preTransitionProgress)
 {
 	if (!DayProgressors.IsValidIndex(DayProgressorIndex))
 	{
@@ -92,15 +96,24 @@ void ADayCycleRunner::ProgressDaySequence(int DayProgressorIndex)
 		return;
 	}
 
-	if (ActiveProgressor == nullptr)
+	if (ActiveProgressor != nullptr)
 	{
 		UE_LOG(GWLogDayChange, Warning, TEXT("Progressor already active. Try RemoveActiveProgressor to cancel a day cycle."))
 		return;
 	}
 
 	LocalFinalizedTransition = false;
-	ActiveProgressor = DayProgressors[DayProgressorIndex].GetDefaultObject();
+	auto progressor = DayProgressors[DayProgressorIndex];
+	ActiveProgressor = GetWorld()->SpawnActor<ADayProgressController>(progressor);
+	ActiveProgressor->TransitionProgress = preTransitionProgress;
+	ActiveProgressor->OnPreTransition();
 }
+
+void ADayCycleRunner::ProgressDaySequence(int DayProgressorIndex)
+{
+	ProgressDaySequenceAtTime(DayProgressorIndex, 0.0f);
+}
+
 
 int ADayCycleRunner::GetDayCount() const
 {

@@ -1,3 +1,5 @@
 ---,DisplayName,ArrivalPriority,Size,Shape,TotalAmount,SentAmount
-TestBox,"Test Box","25","Single","ArcDeep","5","0"
-TestBox_0,"Alternate Box","0","Single","ArcDeep","20","0"
+Small,"Small","1","Small","ArcDeep","220","0"
+Medium,"Medium","5","Single","ArcDeep","18","0"
+MediumLarge,"MediumLarge","10","Double","ArcDeep","10","0"
+Large,"Large","25","Quadruple","ArcDeep","10","0"

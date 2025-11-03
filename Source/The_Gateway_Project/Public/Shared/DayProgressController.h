@@ -9,15 +9,18 @@
  * 
  */
 UCLASS()
-class THE_GATEWAY_PROJECT_API UDayProgressController : public UObject
+class THE_GATEWAY_PROJECT_API ADayProgressController : public AActor
 {
 	GENERATED_BODY()
 
 protected:
 	UFUNCTION()
 	virtual void OnPreTransitionFinished() {}
-	
+
 public:
+	UFUNCTION()
+	virtual void OnPreTransition() {}
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool TransitionFinalized;
 
@@ -40,7 +43,7 @@ public:
 	virtual void OnTick(float DeltaTime);
 
 	UFUNCTION()
-	virtual void OnParentRecognizedTransitionFinished() {}
+	virtual void OnParentRecognizedTransitionFinalized() {}
 
 	UFUNCTION()
 	virtual void OnDestroyAnyReason() {}

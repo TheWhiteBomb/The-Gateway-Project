@@ -3,6 +3,8 @@
 
 #include "Loading/BoxDeliveryManager.h"
 
+#include "GatewayConfiguration.h"
+
 // Sets default values
 ABoxDeliveryManager::ABoxDeliveryManager()
 {
@@ -16,8 +18,6 @@ ABoxDeliveryManager::ABoxDeliveryManager()
 void ABoxDeliveryManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-	BoxDistributionPattern = InitializeBoxDistribution();
 }
 
 // Called every frame
@@ -82,7 +82,7 @@ TArray<FBoxDeliveryDay> ABoxDeliveryManager::InitializeBoxDistribution()
 			remainderTracker -= remainderTrackerChange;
 
 			nextDayCount += remainderTrackerChange;
-			UE_LOG(LogTemp, Display, TEXT("Remainder Tracker: %f"), remainderTracker);
+			UE_LOG(GWLogBoxManager, Display, TEXT("Remainder Tracker: %f"), remainderTracker);
 		}
 		else
 		{
@@ -95,7 +95,7 @@ TArray<FBoxDeliveryDay> ABoxDeliveryManager::InitializeBoxDistribution()
 		
 		boxDistribution.Add(nextDay);
 		totalBoxCounter += nextDayCount;
-		UE_LOG(LogTemp, Display, TEXT("Day result: %d/%d. (%d) Avg: %f"), nextDayCount, boxCount, totalBoxCounter, averageBoxesPerDay);
+		UE_LOG(GWLogBoxManager, Display, TEXT("Day result: %d/%d. (%d) Avg: %f"), nextDayCount, boxCount, totalBoxCounter, averageBoxesPerDay);
 	}
 
 	return boxDistribution;
@@ -105,6 +105,8 @@ TArray<FDeliveryElementConfig> ABoxDeliveryManager::GetDayOfBoxes(int totalBoxes
 {
 	RandomBoxRecursionCounter++;
 	TArray<FDeliveryElementConfig> resultBoxes;
+
+	float recursionChanceBias = static_cast<float>(RandomBoxRecursionCounter)/static_cast<float>(RandomBoxRecursionBound);
 	
 	for (int i = 0; i < totalBoxesOfDay; i++)
 	{
@@ -122,11 +124,11 @@ TArray<FDeliveryElementConfig> ABoxDeliveryManager::GetDayOfBoxes(int totalBoxes
 				continue;
 			}
 
-			if (isLastIteration || getEverything || FMath::FRand() < static_cast<float>(config.ArrivalPriority + 1)/100.0f)
+			if (isLastIteration || getEverything || FMath::FRand() < static_cast<float>(config.ArrivalPriority + 1)/100.0f + recursionChanceBias)
 			{
 				sentAmounts[k]++;
 				resultBoxes.Add(config);
-				UE_LOG(LogTemp, Display, TEXT("Successfully added new box. Box Name: %s (%d/%d)"), *config.DisplayName.ToString(), sentAmounts[k], config.TotalAmount);
+				UE_LOG(GWLogBoxManager, Display, TEXT("Successfully added new box. Box Name: %s (%d/%d)"), *config.DisplayName.ToString(), sentAmounts[k], config.TotalAmount);
 				break;
 			}
 		}
@@ -134,4 +136,35 @@ TArray<FDeliveryElementConfig> ABoxDeliveryManager::GetDayOfBoxes(int totalBoxes
 
 	return resultBoxes;
 }
+
+void ABoxDeliveryManager::SpawnBoxesForDay(int day)
+{
+	TArray<FDeliveryElementConfig> todayBoxes = BoxDistributionPattern[day].Value;
+	UWorld* World = GetWorld();
+
+	const float circleMaximum = todayBoxes.Num();
+	
+	for (int i = 0; i < circleMaximum; i++)
+	{
+		FDeliveryElementConfig v = todayBoxes[i];
+
+		const float circleCurrent = static_cast<float>(i)/circleMaximum;
+		const float appliedCirclePosition = 2*PI * circleCurrent;
+
+		FVector positionOffset = FVector(
+			FMath::Cos(appliedCirclePosition),
+			FMath::Sin(appliedCirclePosition),
+			0
+		) * BoxSpawnDistributionDistance;
+		
+		FRotator rotationOffset = FRotator(0, FMath::FRand() * 360, 0);
+
+		const FVector location = GetActorLocation() + positionOffset;
+		const FRotator rotation = GetActorRotation() + rotationOffset;
+		
+		AActor* createdBox = World->SpawnActor(*StaticBoxParentClasses.Find(v.Size), &location, &rotation);
+		Boxes.Add(createdBox);
+	}
+}
+
 

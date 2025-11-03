@@ -19,7 +19,7 @@ class THE_GATEWAY_PROJECT_API ADayCycleRunner : public AActor
 	bool LocalFinalizedTransition = false;
 
 	UPROPERTY()
-	UDayProgressController* ActiveProgressor;
+	ADayProgressController* ActiveProgressor;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -27,6 +27,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ProgressDaySequence(int DayProgressorIndex);
+
+	UFUNCTION()
+	void ProgressDaySequenceAtTime(int DayProgressorIndex, float preTransitionProgress);
 
 	UFUNCTION(BlueprintCallable)
 	void ProgressDayInstantly();
@@ -38,13 +41,16 @@ public:
 	int GetDayCount() const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<UDayProgressController>> DayProgressors;
+	TArray<TSubclassOf<ADayProgressController>> DayProgressors;
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	virtual void OnDayChange() {}
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	virtual void OnTransitionFinish() {}
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool IsTransitioning();
 	
 protected:
 	// Called when the game starts or when spawned

@@ -79,3 +79,4 @@ DerivedDataCache/*
 # Rider specific cache
 .idea/
 The_Gateway_Project.uproject
+.vsconfig
