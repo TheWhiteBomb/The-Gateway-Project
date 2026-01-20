@@ -26,8 +26,8 @@ public:
 
 private:
 	UFUNCTION()
-	TArray<AActor*> GetPointLights();
+	TArray<AActor*> GetFacilityLights() const;
 
 	UPROPERTY()
-	TArray<AActor*> PointLights;
+	TArray<AActor*> FacilityLights;
 };
