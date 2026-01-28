@@ -80,3 +80,4 @@ DerivedDataCache/*
 .idea/
 The_Gateway_Project.uproject
 .vsconfig
+/Builds
