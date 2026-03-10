@@ -22,8 +22,7 @@
 				"Win64",
 				"Linux",
 				"LinuxArm64",
-				"Android",
-				"VisionOS"
+				"Android"
 			]
 		},
 		{
@@ -43,8 +42,7 @@
 				"Win64",
 				"Linux",
 				"LinuxArm64",
-				"Android",
-				"VisionOS"
+				"Android"
 			]
 		}
 	],
